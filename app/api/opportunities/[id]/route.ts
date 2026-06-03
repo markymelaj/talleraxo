@@ -31,9 +31,10 @@ export async function PATCH(
   const estimatedAmount = body.estimated_amount === null || body.estimated_amount === undefined || body.estimated_amount === ""
     ? null
     : Number(body.estimated_amount);
+  const adminNotes = typeof body.admin_notes === "string" ? body.admin_notes.trim().slice(0, 2000) : null;
 
   if (!isSupabaseAdminConfigured()) {
-    return NextResponse.json({ mode: "demo", id, status: nextStatus, estimated_amount: estimatedAmount });
+    return NextResponse.json({ mode: "demo", id, status: nextStatus, estimated_amount: estimatedAmount, admin_notes: adminNotes });
   }
 
   const supabase = getSupabaseAdmin();
@@ -48,6 +49,7 @@ export async function PATCH(
     .update({
       status: nextStatus,
       estimated_amount: Number.isFinite(estimatedAmount) ? estimatedAmount : null,
+      admin_notes: adminNotes,
       last_status_change_at: new Date().toISOString()
     })
     .eq("id", id)

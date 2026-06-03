@@ -1,146 +1,112 @@
-# Taller Cotizador Demo
+# TallerPro Demo · Cotizador automotriz
 
-Sistema demo para talleres mecánicos, desabolladura, pintura y servicios automotrices afines.
+Sistema demo para talleres mecánicos, desabolladura, pintura y servicios afines.
 
 Incluye:
 
-- Landing comercial de servicios.
-- Formulario de cotización con datos del cliente, vehículo, servicio y fotos.
-- Mensaje automático para WhatsApp.
-- Panel interno tipo oportunidades/Kanban.
-- SQL listo para Supabase.
-- Preparado para GitHub y despliegue en Vercel.
+- Landing pública profesional, móvil primero.
+- Formulario de cotización con datos del cliente, vehículo, servicio, comentario, fecha ideal y fotos.
+- Subida de fotos a Supabase Storage cuando las variables están configuradas.
+- WhatsApp automático con mensaje ordenado.
+- Panel interno `/panel` optimizado para celular.
+- Fotos visibles desde el panel de admin con ampliación tipo modal.
+- Búsqueda por cliente, WhatsApp, patente, modelo o servicio.
+- Filtros por estado: nuevo, falta foto, cotización enviada, agendado, en taller, listo y perdido.
+- Monto estimado y nota interna por oportunidad.
+- Modo demo funcional sin Supabase.
 
-## Stack
+## Acceso demo
 
-- Next.js App Router
-- React
-- TypeScript
-- Supabase Database + Storage
-- Vercel
+Ruta:
 
-## Instalación local
-
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
+```txt
+/panel
 ```
 
-Abrir:
+Clave por defecto:
 
-```bash
-http://localhost:3000
-```
-
-Panel demo:
-
-```bash
-http://localhost:3000/panel
-```
-
-Clave inicial si no configuras `ADMIN_PASSWORD`:
-
-```bash
+```txt
 demo123
 ```
 
-## Configurar Supabase
+## Variables de entorno Vercel
 
-1. Crear un proyecto en Supabase.
-2. Ir a **SQL Editor**.
-3. Pegar y ejecutar el archivo:
+Crear estas variables en Vercel:
 
 ```bash
-supabase/schema.sql
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_WORKSHOP_WHATSAPP=569XXXXXXXX
+NEXT_PUBLIC_SITE_URL=https://tu-dominio.vercel.app
+ADMIN_PASSWORD=demo123
 ```
 
-Ese script crea:
+Para una demo sin base de datos, puedes dejar Supabase vacío. El formulario abre WhatsApp y el panel muestra oportunidades demo.
+
+## Supabase
+
+1. Crear proyecto en Supabase.
+2. Ir a SQL Editor.
+3. Ejecutar `supabase/schema.sql` completo.
+4. Copiar las claves del proyecto a Vercel.
+5. Configurar `NEXT_PUBLIC_WORKSHOP_WHATSAPP` con el número del taller sin espacios.
+
+El SQL crea:
 
 - `workshop_leads`
 - `lead_photos`
 - `lead_status_events`
 - `workshop_services`
 - `workshop_gallery`
-- bucket público `quote-photos`
-- políticas mínimas para recibir cotizaciones y fotos
+- Bucket público `quote-photos`
+- Políticas para que el formulario público pueda insertar oportunidades y subir fotos.
 
-## Variables de entorno
+El panel lee y actualiza usando `SUPABASE_SERVICE_ROLE_KEY` desde rutas API de Next.js. No expongas esa clave en el navegador.
 
-Crear `.env.local` para desarrollo:
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://TU-PROYECTO.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=TU_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY=TU_SERVICE_ROLE_KEY
-NEXT_PUBLIC_WORKSHOP_WHATSAPP=56900000000
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-ADMIN_PASSWORD=cambia-esta-clave
-```
-
-En Vercel debes cargar las mismas variables en:
-
-**Project Settings → Environment Variables**
-
-Importante:
-
-- `NEXT_PUBLIC_WORKSHOP_WHATSAPP` debe ir sin `+`, espacios ni guiones.
-- `SUPABASE_SERVICE_ROLE_KEY` nunca debe exponerse en el frontend. En este proyecto solo se usa en rutas API del servidor.
-- Cambiar `ADMIN_PASSWORD` antes de mostrar una demo real a un cliente.
-
-## Subir a GitHub
+## Desarrollo local
 
 ```bash
-git init
-git add .
-git commit -m "Demo cotizador taller automotriz"
-git branch -M main
-git remote add origin https://github.com/TU-USUARIO/taller-cotizador-demo.git
-git push -u origin main
+npm install
+npm run dev
 ```
 
-## Desplegar en Vercel
+Abrir:
 
-1. Entrar a Vercel.
-2. Importar el repositorio desde GitHub.
-3. Framework: Next.js.
-4. Agregar variables de entorno.
-5. Deploy.
+```txt
+http://localhost:3000
+```
 
-## Personalizar para un taller específico
+Panel:
 
-Editar:
+```txt
+http://localhost:3000/panel
+```
+
+## Build
 
 ```bash
-data/workshop.ts
+npm run build
 ```
 
-Ahí puedes cambiar:
+Este paquete fue validado con:
 
-- nombre del taller
-- ciudad
-- teléfono WhatsApp
-- servicios
-- textos comerciales
-- casos antes/después
-- estados del panel
+```txt
+Next.js 16.2.7
+React 19.2.7
+Node 22.x
+npm 10.9.2
+```
 
-## Flujo comercial recomendado
+## Importante para Vercel
 
-Primera etapa para vender:
+No subir `node_modules`, `.next` ni `package-lock.json`.
 
-> Cotizador digital + landing de servicios + galería antes/después + WhatsApp ordenado.
+Este proyecto incluye:
 
-Segunda etapa:
+- `.npmrc` con registry público.
+- `packageManager: npm@10.9.2`.
+- `engines.node: 22.x`.
+- `vercel.json` con install command estable.
 
-> Panel interno para seguimiento de cotizaciones, trabajos agendados y oportunidades perdidas.
-
-Frase de venta:
-
-> Convertimos consultas desordenadas por WhatsApp en cotizaciones claras con fotos, datos del vehículo y seguimiento.
-
----
-
-## Nota importante para Vercel
-
-Este paquete no debe subirse con `package-lock.json`. Si aparece un lock viejo en GitHub, bórralo antes de desplegar. Vercel debe instalar desde el registry público de npm usando la configuración incluida en `.npmrc` y `vercel.json`.
+Si Vercel vuelve a fallar en instalación, hacer redeploy con **Clear Build Cache**.

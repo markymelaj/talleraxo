@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { serviceOptions } from "@/data/workshop";
 import { buildWhatsAppMessage, buildWhatsAppUrl, normalizeFileName } from "@/lib/format";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
@@ -19,6 +19,11 @@ type FormState = {
   preferred_time: string;
 };
 
+type PreviewPhoto = {
+  name: string;
+  url: string;
+};
+
 const initialState: FormState = {
   customer_name: "",
   customer_whatsapp: "",
@@ -35,14 +40,28 @@ const initialState: FormState = {
 export default function QuoteForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<PreviewPhoto[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
 
+  useEffect(() => {
+    const nextPreviews = files.map((file) => ({ name: file.name, url: URL.createObjectURL(file) }));
+    setPreviews(nextPreviews);
+
+    return () => {
+      nextPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+    };
+  }, [files]);
+
   function updateField(name: keyof FormState, value: string) {
     setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  function removeFile(fileName: string) {
+    setFiles((current) => current.filter((file) => file.name !== fileName));
   }
 
   async function uploadPhotos(): Promise<LeadPhoto[]> {
@@ -107,7 +126,7 @@ export default function QuoteForm() {
       const message = buildWhatsAppMessage(payload, photoUrls);
       const whatsappUrl = buildWhatsAppUrl(message);
 
-      setNotice("Consulta creada. Se abrirá WhatsApp con el mensaje listo para enviar.");
+      setNotice("Consulta lista. Se abrirá WhatsApp con los datos ordenados para enviar al taller.");
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       setForm(initialState);
       setFiles([]);
@@ -120,147 +139,207 @@ export default function QuoteForm() {
   }
 
   return (
-    <form className="formPanel" onSubmit={handleSubmit}>
-      <div className="formGrid">
-        <div className="field">
-          <label htmlFor="customer_name">Nombre</label>
-          <input
-            id="customer_name"
-            required
-            value={form.customer_name}
-            onChange={(event) => updateField("customer_name", event.target.value)}
-            placeholder="Ej: Camila Rojas"
-          />
-        </div>
+    <form className="quoteForm" onSubmit={handleSubmit}>
+      <div className="formIntro">
+        <span className="eyebrow">Cotización rápida</span>
+        <h2>Envia la información que el taller necesita para responder bien.</h2>
+        <p>Mientras más clara llegue la consulta, más rápido se puede estimar, pedir una foto extra o agendar revisión.</p>
+      </div>
 
-        <div className="field">
-          <label htmlFor="customer_whatsapp">WhatsApp</label>
-          <input
-            id="customer_whatsapp"
-            required
-            value={form.customer_whatsapp}
-            onChange={(event) => updateField("customer_whatsapp", event.target.value)}
-            placeholder="Ej: +56 9 1234 5678"
-          />
+      <div className="formSection">
+        <div className="formSectionTitle">
+          <span>1</span>
+          <div>
+            <strong>Cliente</strong>
+            <p>Datos mínimos para responder.</p>
+          </div>
         </div>
-
-        <div className="field">
-          <label htmlFor="vehicle_brand">Marca</label>
-          <input
-            id="vehicle_brand"
-            value={form.vehicle_brand}
-            onChange={(event) => updateField("vehicle_brand", event.target.value)}
-            placeholder="Toyota, Hyundai, Nissan..."
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="vehicle_model">Modelo</label>
-          <input
-            id="vehicle_model"
-            value={form.vehicle_model}
-            onChange={(event) => updateField("vehicle_model", event.target.value)}
-            placeholder="Yaris, Accent, Kicks..."
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="vehicle_year">Año</label>
-          <input
-            id="vehicle_year"
-            inputMode="numeric"
-            min="1980"
-            max="2035"
-            type="number"
-            value={form.vehicle_year}
-            onChange={(event) => updateField("vehicle_year", event.target.value)}
-            placeholder="2018"
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="plate">Patente opcional</label>
-          <input
-            id="plate"
-            value={form.plate}
-            onChange={(event) => updateField("plate", event.target.value.toUpperCase())}
-            placeholder="ABCD12"
-          />
-        </div>
-
-        <div className="field full">
-          <label htmlFor="service_type">Servicio requerido</label>
-          <select
-            id="service_type"
-            value={form.service_type}
-            onChange={(event) => updateField("service_type", event.target.value)}
-          >
-            {serviceOptions.map((service) => (
-              <option key={service} value={service}>
-                {service}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="field full">
-          <label htmlFor="damage_description">Comentario o descripción del daño</label>
-          <textarea
-            id="damage_description"
-            value={form.damage_description}
-            onChange={(event) => updateField("damage_description", event.target.value)}
-            placeholder="Describe dónde está el daño, si fue choque, rayón, abolladura, ruido, falla o mantención requerida."
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="preferred_date">Fecha ideal para evaluación</label>
-          <input
-            id="preferred_date"
-            type="date"
-            value={form.preferred_date}
-            onChange={(event) => updateField("preferred_date", event.target.value)}
-          />
-        </div>
-
-        <div className="field">
-          <label htmlFor="preferred_time">Horario ideal</label>
-          <select
-            id="preferred_time"
-            value={form.preferred_time}
-            onChange={(event) => updateField("preferred_time", event.target.value)}
-          >
-            <option value="">A coordinar</option>
-            <option value="Mañana">Mañana</option>
-            <option value="Tarde">Tarde</option>
-            <option value="Sábado">Sábado</option>
-          </select>
-        </div>
-
-        <div className="field full">
-          <label htmlFor="photos">Fotos del daño</label>
-          <div className="fileBox">
+        <div className="formGrid twoCols">
+          <div className="field">
+            <label htmlFor="customer_name">Nombre</label>
             <input
-              id="photos"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(event) => setFiles(Array.from(event.target.files || []).slice(0, 6))}
+              id="customer_name"
+              required
+              value={form.customer_name}
+              onChange={(event) => updateField("customer_name", event.target.value)}
+              placeholder="Ej: Camila Rojas"
             />
-            <div className="fileMeta">
-              {files.length > 0
-                ? `${files.length} foto(s) seleccionada(s). Máximo recomendado: 6.`
-                : "Puedes seleccionar varias fotos. Si Supabase Storage no está configurado, el mensaje pedirá adjuntarlas en WhatsApp."}
-            </div>
+          </div>
+
+          <div className="field">
+            <label htmlFor="customer_whatsapp">WhatsApp</label>
+            <input
+              id="customer_whatsapp"
+              required
+              value={form.customer_whatsapp}
+              onChange={(event) => updateField("customer_whatsapp", event.target.value)}
+              placeholder="Ej: +56 9 1234 5678"
+            />
           </div>
         </div>
       </div>
 
-      <div className="formFooter">
+      <div className="formSection">
+        <div className="formSectionTitle">
+          <span>2</span>
+          <div>
+            <strong>Vehículo</strong>
+            <p>Marca, modelo y datos útiles para revisar.</p>
+          </div>
+        </div>
+        <div className="formGrid vehicleGrid">
+          <div className="field">
+            <label htmlFor="vehicle_brand">Marca</label>
+            <input
+              id="vehicle_brand"
+              value={form.vehicle_brand}
+              onChange={(event) => updateField("vehicle_brand", event.target.value)}
+              placeholder="Toyota, Hyundai, Nissan..."
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="vehicle_model">Modelo</label>
+            <input
+              id="vehicle_model"
+              value={form.vehicle_model}
+              onChange={(event) => updateField("vehicle_model", event.target.value)}
+              placeholder="Yaris, Accent, Kicks..."
+            />
+          </div>
+
+          <div className="field smallField">
+            <label htmlFor="vehicle_year">Año</label>
+            <input
+              id="vehicle_year"
+              inputMode="numeric"
+              min="1980"
+              max="2035"
+              type="number"
+              value={form.vehicle_year}
+              onChange={(event) => updateField("vehicle_year", event.target.value)}
+              placeholder="2018"
+            />
+          </div>
+
+          <div className="field smallField">
+            <label htmlFor="plate">Patente</label>
+            <input
+              id="plate"
+              value={form.plate}
+              onChange={(event) => updateField("plate", event.target.value.toUpperCase())}
+              placeholder="ABCD12"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="formSection">
+        <div className="formSectionTitle">
+          <span>3</span>
+          <div>
+            <strong>Trabajo solicitado</strong>
+            <p>Servicio, descripción y fotos.</p>
+          </div>
+        </div>
+        <div className="formGrid">
+          <div className="field full">
+            <label htmlFor="service_type">Servicio requerido</label>
+            <select
+              id="service_type"
+              value={form.service_type}
+              onChange={(event) => updateField("service_type", event.target.value)}
+            >
+              {serviceOptions.map((service) => (
+                <option key={service} value={service}>
+                  {service}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="field full">
+            <label htmlFor="damage_description">Comentario o descripción</label>
+            <textarea
+              id="damage_description"
+              value={form.damage_description}
+              onChange={(event) => updateField("damage_description", event.target.value)}
+              placeholder="Ej: golpe en puerta del copiloto, rayón en parachoque, ruido al frenar, mantención antes de viaje..."
+            />
+          </div>
+
+          <div className="field full">
+            <label htmlFor="photos">Fotos del daño</label>
+            <label className="fileDrop" htmlFor="photos">
+              <input
+                id="photos"
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(event) => setFiles(Array.from(event.target.files || []).slice(0, 6))}
+              />
+              <strong>Subir fotos</strong>
+              <span>Hasta 6 imágenes. Ideal: una general, una de cerca y otra con buena luz.</span>
+            </label>
+            {previews.length > 0 && (
+              <div className="previewGrid">
+                {previews.map((preview) => (
+                  <div className="previewItem" key={preview.url}>
+                    <img src={preview.url} alt={preview.name} />
+                    <button type="button" onClick={() => removeFile(preview.name)} aria-label={`Quitar ${preview.name}`}>
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="formSection lastSection">
+        <div className="formSectionTitle">
+          <span>4</span>
+          <div>
+            <strong>Disponibilidad</strong>
+            <p>Ayuda a pasar de consulta a agenda.</p>
+          </div>
+        </div>
+        <div className="formGrid twoCols">
+          <div className="field">
+            <label htmlFor="preferred_date">Fecha ideal para evaluación</label>
+            <input
+              id="preferred_date"
+              type="date"
+              value={form.preferred_date}
+              onChange={(event) => updateField("preferred_date", event.target.value)}
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="preferred_time">Horario ideal</label>
+            <select
+              id="preferred_time"
+              value={form.preferred_time}
+              onChange={(event) => updateField("preferred_time", event.target.value)}
+            >
+              <option value="">A coordinar</option>
+              <option value="Mañana">Mañana</option>
+              <option value="Tarde">Tarde</option>
+              <option value="Sábado">Sábado</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="stickySubmit">
+        <div>
+          <strong>Listo para WhatsApp</strong>
+          <span>También queda guardado en el panel cuando Supabase está activo.</span>
+        </div>
         <button className="primaryButton" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Preparando consulta..." : "Enviar por WhatsApp"}
+          {isSubmitting ? "Preparando..." : "Enviar cotización"}
         </button>
-        <span className="smallText">También queda lista para seguimiento interno cuando Supabase está activo.</span>
       </div>
 
       {notice && <div className="notice">{notice}</div>}

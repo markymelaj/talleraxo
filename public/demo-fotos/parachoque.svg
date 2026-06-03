@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2d3339"/><stop offset="1" stop-color="#0f1418"/></linearGradient><linearGradient id="p" x1="0" x2="1"><stop stop-color="#f2f2f0"/><stop offset="1" stop-color="#bfc4c7"/></linearGradient></defs>
+  <rect width="900" height="650" fill="url(#g)"/>
+  <rect x="80" y="95" width="740" height="430" rx="46" fill="#151b20"/>
+  <path d="M136 354c48-110 146-160 296-160h91c113 0 197 51 240 149 13 31-8 67-42 67H177c-34 0-55-25-41-56Z" fill="url(#p)"/>
+  <path d="M618 360h126" stroke="#8c2222" stroke-width="18" stroke-linecap="round"/>
+  <path d="M640 336c28 9 56 15 84 18" stroke="#d04d2c" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="275" cy="411" r="58" fill="#121619"/><circle cx="275" cy="411" r="28" fill="#5d6267"/>
+  <circle cx="628" cy="411" r="58" fill="#121619"/><circle cx="628" cy="411" r="28" fill="#5d6267"/>
+  <rect x="144" y="540" width="320" height="44" rx="22" fill="#f36d2f"/><text x="170" y="570" font-family="Arial" font-size="24" font-weight="700" fill="#101010">Foto demo · Parachoque</text>
+</svg>

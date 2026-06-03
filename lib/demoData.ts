@@ -17,7 +17,15 @@ export const demoOpportunities: Opportunity[] = [
     source: "demo_web",
     status: "nuevo",
     estimated_amount: null,
-    admin_notes: "Pedir foto de costado y confirmar color."
+    admin_notes: "Pedir foto de costado y confirmar color.",
+    lead_photos: [
+      {
+        public_url: "/demo-fotos/parachoque.svg",
+        file_name: "parachoque-trasero-demo.svg",
+        mime_type: "image/svg+xml",
+        size_bytes: 4120
+      }
+    ]
   },
   {
     id: "demo-002",
@@ -34,7 +42,15 @@ export const demoOpportunities: Opportunity[] = [
     source: "demo_web",
     status: "falta_foto",
     estimated_amount: 0,
-    admin_notes: "Falta foto frontal y foto con luz natural."
+    admin_notes: "Falta foto frontal y foto con luz natural.",
+    lead_photos: [
+      {
+        public_url: "/demo-fotos/puerta.svg",
+        file_name: "puerta-copiloto-demo.svg",
+        mime_type: "image/svg+xml",
+        size_bytes: 3980
+      }
+    ]
   },
   {
     id: "demo-003",
@@ -50,6 +66,14 @@ export const demoOpportunities: Opportunity[] = [
     source: "demo_web",
     status: "agendado",
     estimated_amount: 45000,
-    admin_notes: "Agendada evaluación inicial."
+    admin_notes: "Agendada evaluación inicial.",
+    lead_photos: [
+      {
+        public_url: "/demo-fotos/motor.svg",
+        file_name: "revision-motor-demo.svg",
+        mime_type: "image/svg+xml",
+        size_bytes: 3890
+      }
+    ]
   }
 ];

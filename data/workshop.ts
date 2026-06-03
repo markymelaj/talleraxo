@@ -1,37 +1,37 @@
 export const workshop = {
-  name: "Taller Automotriz Demo",
+  name: "TallerPro Demo",
   brandLine: "Cotizador digital para talleres mecánicos, pintura y desabolladura",
   city: "Concepción, Biobío",
   phone: process.env.NEXT_PUBLIC_WORKSHOP_WHATSAPP || "56900000000",
   hours: "Lunes a viernes · Sábado medio día",
   location: "Concepción, Biobío",
-  heroTitle: "Recibe cotizaciones automotrices con fotos, datos del vehículo y WhatsApp ordenado.",
+  heroTitle: "Cotizaciones automotrices claras antes del primer WhatsApp.",
   heroText:
-    "Una demo pensada para talleres de desabolladura, pintura, mecánica general y servicios afines. El cliente completa la información clave antes de pedir presupuesto y el taller recibe una consulta mucho más clara.",
+    "El cliente manda fotos, datos del vehículo, tipo de reparación y disponibilidad. El taller recibe una consulta ordenada, lista para responder, cotizar o agendar.",
   services: [
     {
       title: "Desabolladura",
-      text: "Recepción de fotos del daño, ubicación de la pieza y comentario del cliente."
+      text: "Fotos del daño, pieza afectada y prioridad para estimar rápido sin tanto ida y vuelta."
     },
     {
       title: "Pintura por pieza",
-      text: "Cotización preliminar según panel afectado, color y estado del vehículo."
+      text: "Solicitud ordenada por panel, color, estado del vehículo y fecha ideal de evaluación."
     },
     {
       title: "Pintura general",
-      text: "Solicitud ordenada para evaluación de trabajos completos o restauraciones."
+      text: "Ingreso simple para trabajos completos, restauraciones y evaluaciones de mayor valor."
     },
     {
       title: "Mecánica general",
-      text: "Ingreso de síntomas, historial breve y disponibilidad para revisión."
+      text: "Síntomas, comentario del cliente y disponibilidad para diagnóstico en taller."
     },
     {
       title: "Choques menores",
-      text: "Registro inicial para priorizar reparaciones rápidas y trabajos de alta urgencia."
+      text: "Registro visual para priorizar reparaciones, pedir más fotos o agendar revisión."
     },
     {
       title: "Mantención preventiva",
-      text: "Agenda de revisión, kilometraje y necesidad principal del cliente."
+      text: "Consultas ordenadas para revisión, viaje, kilometraje o mantenciones periódicas."
     }
   ],
   gallery: [
