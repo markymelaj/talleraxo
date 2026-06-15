@@ -16,8 +16,8 @@ function normalizePayload(body: LeadInput): LeadInput {
     plate: cleanText(body.plate).toUpperCase(),
     service_type: cleanText(body.service_type, "Consulta general"),
     damage_description: cleanText(body.damage_description),
-    preferred_date: cleanText(body.preferred_date),
-    preferred_time: cleanText(body.preferred_time),
+    preferred_date: cleanText(body.preferred_date) || null,
+    preferred_time: cleanText(body.preferred_time) || null,
     source: cleanText(body.source, "demo_web"),
     photos: Array.isArray(body.photos) ? body.photos.slice(0, 6) : []
   };

@@ -25,8 +25,10 @@ Mostrar que no es una página decorativa: es una forma de ordenar consultas real
 3. Entrar al panel:
    - Ruta `/panel`.
    - Clave `demo123`.
-   - Mostrar que la consulta cargada aparece en el panel del mismo navegador.
+   - Mostrar que la consulta cargada aparece en el panel.
    - Abrir fotos, revisar comentario, cambiar estado, poner monto estimado y guardar.
+   - Crear una entrada manual con **Nueva entrada** para explicar qué pasa cuando alguien llega directamente al taller.
+   - Cambiar entre **Lista**, **Día**, **Semana** y **Mes** para mostrar agenda y trabajos pendientes.
 
 4. Cierre comercial:
    - “Esto le evita perder consultas, ordenar trabajos y responder más rápido.”
@@ -39,6 +41,8 @@ Mostrar que no es una página decorativa: es una forma de ordenar consultas real
 - WhatsApp automático con mensaje ordenado.
 - Panel interno con clave.
 - Estados de seguimiento.
+- Alta manual desde panel para clientes presenciales o llamados.
+- Agenda diaria, semanal y mensual.
 - Visualización de fotos.
 - Búsqueda por cliente, patente, modelo o servicio.
 - Supabase configurado para guardar oportunidades reales.

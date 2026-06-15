@@ -1,25 +1,6 @@
 import QuoteForm from "@/components/QuoteForm";
 import { workshop } from "@/data/workshop";
 
-const flowSteps = [
-  {
-    title: "El cliente entiende qué enviar",
-    text: "No parte con un mensaje suelto. El sistema lo guía con datos simples y fotos."
-  },
-  {
-    title: "La consulta llega completa",
-    text: "Nombre, WhatsApp, vehículo, servicio, comentario, disponibilidad y fotos en un solo registro."
-  },
-  {
-    title: "El taller decide el próximo paso",
-    text: "Responder, pedir una foto, estimar precio, agendar revisión o marcar como perdido."
-  },
-  {
-    title: "Nada queda perdido en el chat",
-    text: "Cada oportunidad tiene estado, nota interna, monto estimado y botón directo a WhatsApp."
-  }
-];
-
 export default function Home() {
   return (
     <main>
@@ -120,18 +101,18 @@ export default function Home() {
       <section className="section">
         <div className="container">
           <div className="sectionHeader">
-            <span className="eyebrow">Para el dueño del taller</span>
-            <h2>La diferencia está en ordenar la entrada de trabajo.</h2>
+            <span className="eyebrow">Herramientas del sistema</span>
+            <h2>Todo lo que necesita un taller para ordenar consultas y trabajos.</h2>
             <p>
-              Un sitio común muestra información. Este sistema captura oportunidades, las ordena y deja un camino claro para responder, cotizar y agendar.
+              Está pensado para que cualquier persona del equipo lo entienda: entra una consulta, se registra, se agenda, se responde y se sigue hasta cerrar.
             </p>
           </div>
           <div className="serviceGrid">
-            {workshop.ownerBenefits.map((benefit, index) => (
-              <article className="serviceCard" key={benefit.title}>
+            {workshop.systemTools.map((tool, index) => (
+              <article className="serviceCard" key={tool.title}>
                 <span>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{benefit.title}</h3>
-                <p>{benefit.text}</p>
+                <h3>{tool.title}</h3>
+                <p>{tool.text}</p>
               </article>
             ))}
           </div>
@@ -187,11 +168,11 @@ export default function Home() {
       <section className="flowSection">
         <div className="container">
           <div className="sectionHeader">
-            <span className="eyebrow">Flujo de venta</span>
-            <h2>Del “hola, cuánto sale” a una oportunidad trabajable.</h2>
+            <span className="eyebrow">Uso diario</span>
+            <h2>Así se opera sin hacerlo complicado.</h2>
           </div>
           <div className="flowGrid">
-            {flowSteps.map((step, index) => (
+            {workshop.dailyFlow.map((step, index) => (
               <article className="flowCard" key={step.title}>
                 <span>{index + 1}</span>
                 <h3>{step.title}</h3>

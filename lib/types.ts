@@ -17,8 +17,8 @@ export type LeadInput = {
   plate?: string;
   service_type: string;
   damage_description?: string;
-  preferred_date?: string;
-  preferred_time?: string;
+  preferred_date?: string | null;
+  preferred_time?: string | null;
   source?: string;
   photos?: LeadPhoto[];
 };

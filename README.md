@@ -9,6 +9,8 @@ Incluye:
 - Subida de fotos a Supabase Storage cuando las variables están configuradas.
 - WhatsApp automático con mensaje ordenado.
 - Panel interno `/panel` optimizado para celular.
+- Alta manual desde admin para clientes presenciales, llamados o consultas directas por WhatsApp.
+- Agenda compacta con vistas de lista, día, semana y mes.
 - Fotos visibles desde el panel de admin con ampliación tipo modal.
 - Búsqueda por cliente, WhatsApp, patente, modelo o servicio.
 - Filtros por estado: nuevo, falta foto, cotización enviada, agendado, en taller, listo y perdido.
@@ -54,6 +56,8 @@ Para una demo sin base de datos, puedes dejar Supabase vacío. El formulario abr
 4. Enviar cotización. Se abre WhatsApp con el mensaje armado.
 5. Entrar a `/panel` con clave `demo123`.
 6. Mostrar la oportunidad, fotos, estados, monto estimado y respuesta por WhatsApp.
+7. Crear una entrada manual desde **Nueva entrada** para simular un cliente que llegó al taller.
+8. Cambiar a vista **Día**, **Semana** o **Mes** para revisar agenda y trabajos pendientes.
 
 Ver guion completo en `DEMO_PRESENTACION.md`.
 

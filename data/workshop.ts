@@ -8,6 +8,51 @@ export const workshop = {
   heroTitle: "Convierte consultas vagas en trabajos listos para cotizar.",
   heroText:
     "El cliente envía fotos, datos del vehículo, servicio requerido y disponibilidad. El taller recibe una oportunidad ordenada para responder, presupuestar o agendar sin perder tiempo en preguntas repetidas.",
+
+  systemTools: [
+    {
+      title: "Cotizador guiado",
+      text: "El cliente entra, completa vehículo, servicio, comentario, disponibilidad y fotos. Llega una consulta mucho más clara que un mensaje suelto."
+    },
+    {
+      title: "WhatsApp ordenado",
+      text: "El sistema arma el mensaje con todos los datos importantes para responder rápido sin volver a preguntar lo básico."
+    },
+    {
+      title: "Panel de oportunidades",
+      text: "Cada consulta queda en una bandeja con estado, fotos, monto estimado, nota interna y botón para responder."
+    },
+    {
+      title: "Entrada manual",
+      text: "Si el cliente llega al taller, llama por teléfono o escribe directo, también se puede cargar desde el admin."
+    },
+    {
+      title: "Agenda diaria, semanal y mensual",
+      text: "Permite ver trabajos pendientes, agendados, en taller y listos sin depender de memoria o papeles."
+    },
+    {
+      title: "Seguimiento de estados",
+      text: "Nuevo, falta foto, cotizado, agendado, en taller, listo o perdido. Simple, entendible y útil para no dejar consultas botadas."
+    }
+  ],
+  dailyFlow: [
+    {
+      title: "1. Entra la consulta",
+      text: "Puede llegar desde la página, por WhatsApp, por llamada o presencial."
+    },
+    {
+      title: "2. Se registra ordenada",
+      text: "Cliente, vehículo, servicio, fotos, fecha, hora, monto y notas quedan en el panel."
+    },
+    {
+      title: "3. Se agenda o se cotiza",
+      text: "El taller cambia el estado y ve el trabajo en lista, día, semana o mes."
+    },
+    {
+      title: "4. Se cierra el trabajo",
+      text: "Se responde por WhatsApp, se marca en taller, listo o perdido y queda historial operativo."
+    }
+  ],
   services: [
     {
       title: "Desabolladura",
