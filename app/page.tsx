@@ -7,7 +7,7 @@ export default function Home() {
       <header className="siteHeader">
         <div className="container nav">
           <a href="#inicio" className="brand" aria-label={workshop.name}>
-            <span className="logoMark">TP</span>
+            <span className="logoMark">⚙</span>
             <span>
               <strong>{workshop.name}</strong>
               <small>{workshop.city}</small>
