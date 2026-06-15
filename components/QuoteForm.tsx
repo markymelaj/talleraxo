@@ -2,7 +2,12 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { serviceOptions } from "@/data/workshop";
-import { buildWhatsAppMessage, buildWhatsAppUrl, normalizeFileName } from "@/lib/format";
+import {
+  buildWhatsAppMessage,
+  buildWhatsAppUrl,
+  normalizeFileName,
+} from "@/lib/format";
+import { saveStoredDemoOpportunity } from "@/lib/demoStore";
 import { getSupabaseBrowserClient } from "@/lib/supabaseBrowser";
 import type { LeadInput, LeadPhoto } from "@/lib/types";
 
@@ -34,7 +39,7 @@ const initialState: FormState = {
   service_type: "Desabolladura",
   damage_description: "",
   preferred_date: "",
-  preferred_time: ""
+  preferred_time: "",
 };
 
 export default function QuoteForm() {
@@ -44,11 +49,15 @@ export default function QuoteForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState<string | null>(null);
 
   const supabase = useMemo(() => getSupabaseBrowserClient(), []);
 
   useEffect(() => {
-    const nextPreviews = files.map((file) => ({ name: file.name, url: URL.createObjectURL(file) }));
+    const nextPreviews = files.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }));
     setPreviews(nextPreviews);
 
     return () => {
@@ -64,6 +73,26 @@ export default function QuoteForm() {
     setFiles((current) => current.filter((file) => file.name !== fileName));
   }
 
+  function fillDemoData() {
+    setForm({
+      customer_name: "Camila Rojas",
+      customer_whatsapp: "+56 9 5555 1010",
+      vehicle_brand: "Toyota",
+      vehicle_model: "Yaris",
+      vehicle_year: "2018",
+      plate: "ABCD12",
+      service_type: "Pintura por pieza",
+      damage_description:
+        "Rayón profundo en parachoque trasero derecho. Puede llevarlo mañana en la tarde.",
+      preferred_date: new Date().toISOString().slice(0, 10),
+      preferred_time: "Tarde",
+    });
+    setNotice(
+      "Datos de ejemplo cargados. Ahora puedes enviar y luego entrar al panel para mostrar el seguimiento.",
+    );
+    setLastWhatsAppUrl(null);
+  }
+
   async function uploadPhotos(): Promise<LeadPhoto[]> {
     if (!supabase || files.length === 0) return [];
 
@@ -76,7 +105,7 @@ export default function QuoteForm() {
         .upload(path, file, {
           cacheControl: "3600",
           upsert: false,
-          contentType: file.type
+          contentType: file.type,
         });
 
       if (uploadError) {
@@ -90,7 +119,7 @@ export default function QuoteForm() {
         public_url: data.publicUrl,
         file_name: file.name,
         mime_type: file.type,
-        size_bytes: file.size
+        size_bytes: file.size,
       });
     }
 
@@ -102,6 +131,7 @@ export default function QuoteForm() {
     setIsSubmitting(true);
     setNotice(null);
     setError(null);
+    setLastWhatsAppUrl(null);
 
     try {
       const photos = await uploadPhotos();
@@ -109,29 +139,50 @@ export default function QuoteForm() {
         ...form,
         vehicle_year: form.vehicle_year ? Number(form.vehicle_year) : null,
         source: "demo_web",
-        photos
+        photos,
       };
 
       const response = await fetch("/api/quotes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("No se pudo guardar la cotización. Revisa la configuración de Supabase.");
+        throw new Error(
+          "No se pudo guardar la cotización. Revisa la configuración de Supabase.",
+        );
       }
 
-      const photoUrls = photos.map((photo) => photo.public_url).filter(Boolean) as string[];
+      const result = (await response.json()) as {
+        mode?: "demo" | "supabase";
+        lead?: { id?: string };
+      };
+
+      if (result.mode === "demo") {
+        saveStoredDemoOpportunity(payload, files, result.lead?.id);
+      }
+
+      const photoUrls = photos
+        .map((photo) => photo.public_url)
+        .filter(Boolean) as string[];
       const message = buildWhatsAppMessage(payload, photoUrls);
       const whatsappUrl = buildWhatsAppUrl(message);
 
-      setNotice("Consulta lista. Se abrirá WhatsApp con los datos ordenados para enviar al taller.");
+      setLastWhatsAppUrl(whatsappUrl);
+      setNotice(
+        result.mode === "demo"
+          ? "Consulta guardada en esta demo. Ahora puedes abrir WhatsApp y entrar al panel para verla como oportunidad nueva."
+          : "Consulta guardada en el panel. Se abrirá WhatsApp con los datos ordenados para enviarlos al taller.",
+      );
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       setForm(initialState);
       setFiles([]);
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : "Ocurrió un error inesperado.";
+      const message =
+        submitError instanceof Error
+          ? submitError.message
+          : "Ocurrió un error inesperado.";
       setError(message);
     } finally {
       setIsSubmitting(false);
@@ -141,9 +192,16 @@ export default function QuoteForm() {
   return (
     <form className="quoteForm" onSubmit={handleSubmit}>
       <div className="formIntro">
-        <span className="eyebrow">Cotización rápida</span>
-        <h2>Envia la información que el taller necesita para responder bien.</h2>
-        <p>Mientras más clara llegue la consulta, más rápido se puede estimar, pedir una foto extra o agendar revisión.</p>
+        <span className="eyebrow">Consulta guiada</span>
+        <h2>
+          Envía la información que el taller necesita para responder bien.
+        </h2>
+        <p>
+          El objetivo es simple: que el taller reciba una consulta completa, con vehículo, servicio, fotos y disponibilidad.
+        </p>
+        <button className="demoFillButton" type="button" onClick={fillDemoData}>
+          Cargar ejemplo de consulta
+        </button>
       </div>
 
       <div className="formSection">
@@ -161,7 +219,9 @@ export default function QuoteForm() {
               id="customer_name"
               required
               value={form.customer_name}
-              onChange={(event) => updateField("customer_name", event.target.value)}
+              onChange={(event) =>
+                updateField("customer_name", event.target.value)
+              }
               placeholder="Ej: Camila Rojas"
             />
           </div>
@@ -172,7 +232,9 @@ export default function QuoteForm() {
               id="customer_whatsapp"
               required
               value={form.customer_whatsapp}
-              onChange={(event) => updateField("customer_whatsapp", event.target.value)}
+              onChange={(event) =>
+                updateField("customer_whatsapp", event.target.value)
+              }
               placeholder="Ej: +56 9 1234 5678"
             />
           </div>
@@ -193,7 +255,9 @@ export default function QuoteForm() {
             <input
               id="vehicle_brand"
               value={form.vehicle_brand}
-              onChange={(event) => updateField("vehicle_brand", event.target.value)}
+              onChange={(event) =>
+                updateField("vehicle_brand", event.target.value)
+              }
               placeholder="Toyota, Hyundai, Nissan..."
             />
           </div>
@@ -203,7 +267,9 @@ export default function QuoteForm() {
             <input
               id="vehicle_model"
               value={form.vehicle_model}
-              onChange={(event) => updateField("vehicle_model", event.target.value)}
+              onChange={(event) =>
+                updateField("vehicle_model", event.target.value)
+              }
               placeholder="Yaris, Accent, Kicks..."
             />
           </div>
@@ -217,7 +283,9 @@ export default function QuoteForm() {
               max="2035"
               type="number"
               value={form.vehicle_year}
-              onChange={(event) => updateField("vehicle_year", event.target.value)}
+              onChange={(event) =>
+                updateField("vehicle_year", event.target.value)
+              }
               placeholder="2018"
             />
           </div>
@@ -227,7 +295,9 @@ export default function QuoteForm() {
             <input
               id="plate"
               value={form.plate}
-              onChange={(event) => updateField("plate", event.target.value.toUpperCase())}
+              onChange={(event) =>
+                updateField("plate", event.target.value.toUpperCase())
+              }
               placeholder="ABCD12"
             />
           </div>
@@ -248,7 +318,9 @@ export default function QuoteForm() {
             <select
               id="service_type"
               value={form.service_type}
-              onChange={(event) => updateField("service_type", event.target.value)}
+              onChange={(event) =>
+                updateField("service_type", event.target.value)
+              }
             >
               {serviceOptions.map((service) => (
                 <option key={service} value={service}>
@@ -263,7 +335,9 @@ export default function QuoteForm() {
             <textarea
               id="damage_description"
               value={form.damage_description}
-              onChange={(event) => updateField("damage_description", event.target.value)}
+              onChange={(event) =>
+                updateField("damage_description", event.target.value)
+              }
               placeholder="Ej: golpe en puerta del copiloto, rayón en parachoque, ruido al frenar, mantención antes de viaje..."
             />
           </div>
@@ -276,17 +350,26 @@ export default function QuoteForm() {
                 type="file"
                 accept="image/*"
                 multiple
-                onChange={(event) => setFiles(Array.from(event.target.files || []).slice(0, 6))}
+                onChange={(event) =>
+                  setFiles(Array.from(event.target.files || []).slice(0, 6))
+                }
               />
               <strong>Subir fotos</strong>
-              <span>Hasta 6 imágenes. Ideal: una general, una de cerca y otra con buena luz.</span>
+              <span>
+                Hasta 6 imágenes. Ideal: una general, una de cerca y otra con
+                buena luz.
+              </span>
             </label>
             {previews.length > 0 && (
               <div className="previewGrid">
                 {previews.map((preview) => (
                   <div className="previewItem" key={preview.url}>
                     <img src={preview.url} alt={preview.name} />
-                    <button type="button" onClick={() => removeFile(preview.name)} aria-label={`Quitar ${preview.name}`}>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(preview.name)}
+                      aria-label={`Quitar ${preview.name}`}
+                    >
                       ×
                     </button>
                   </div>
@@ -312,7 +395,9 @@ export default function QuoteForm() {
               id="preferred_date"
               type="date"
               value={form.preferred_date}
-              onChange={(event) => updateField("preferred_date", event.target.value)}
+              onChange={(event) =>
+                updateField("preferred_date", event.target.value)
+              }
             />
           </div>
 
@@ -321,7 +406,9 @@ export default function QuoteForm() {
             <select
               id="preferred_time"
               value={form.preferred_time}
-              onChange={(event) => updateField("preferred_time", event.target.value)}
+              onChange={(event) =>
+                updateField("preferred_time", event.target.value)
+              }
             >
               <option value="">A coordinar</option>
               <option value="Mañana">Mañana</option>
@@ -334,15 +421,32 @@ export default function QuoteForm() {
 
       <div className="stickySubmit">
         <div>
-          <strong>Listo para WhatsApp</strong>
-          <span>También queda guardado en el panel cuando Supabase está activo.</span>
+          <strong>Listo para enviar</strong>
+          <span>
+            Se guarda en el panel y se arma un WhatsApp ordenado para responder.
+          </span>
         </div>
         <button className="primaryButton" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Preparando..." : "Enviar cotización"}
+          {isSubmitting ? "Preparando..." : "Enviar consulta"}
         </button>
       </div>
 
       {notice && <div className="notice">{notice}</div>}
+      {lastWhatsAppUrl && (
+        <div className="successActions">
+          <a
+            className="whatsappButton"
+            href={lastWhatsAppUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Abrir WhatsApp
+          </a>
+          <a className="secondaryButton" href="/panel">
+            Ver en panel demo
+          </a>
+        </div>
+      )}
       {error && <div className="notice errorNotice">{error}</div>}
     </form>
   );

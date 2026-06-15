@@ -3,20 +3,20 @@ import { workshop } from "@/data/workshop";
 
 const flowSteps = [
   {
-    title: "El cliente entra",
-    text: "Ve servicios, trabajos tipo y entiende qué datos debe enviar."
+    title: "El cliente entiende qué enviar",
+    text: "No parte con un mensaje suelto. El sistema lo guía con datos simples y fotos."
   },
   {
-    title: "Carga fotos y vehículo",
-    text: "Marca, modelo, año, patente opcional, comentario y disponibilidad."
+    title: "La consulta llega completa",
+    text: "Nombre, WhatsApp, vehículo, servicio, comentario, disponibilidad y fotos en un solo registro."
   },
   {
-    title: "Llega ordenado",
-    text: "El taller recibe WhatsApp armado y la oportunidad queda en el panel."
+    title: "El taller decide el próximo paso",
+    text: "Responder, pedir una foto, estimar precio, agendar revisión o marcar como perdido."
   },
   {
-    title: "Se hace seguimiento",
-    text: "Nuevo, falta foto, cotizado, agendado, en taller, listo o perdido."
+    title: "Nada queda perdido en el chat",
+    text: "Cada oportunidad tiene estado, nota interna, monto estimado y botón directo a WhatsApp."
   }
 ];
 
@@ -34,12 +34,12 @@ export default function Home() {
           </a>
           <nav className="navLinks" aria-label="Menú principal">
             <a href="#servicios">Servicios</a>
-            <a href="#trabajos">Trabajos</a>
+            <a href="#trabajos">Resultados</a>
             <a href="#cotizar">Cotizar</a>
             <a href="/panel">Panel</a>
           </nav>
           <a className="navCta" href="#cotizar">
-            Pedir cotización
+            Probar cotizador
           </a>
         </div>
       </header>
@@ -47,30 +47,30 @@ export default function Home() {
       <section id="inicio" className="hero">
         <div className="container heroGrid">
           <div className="heroCopy">
-            <span className="eyebrow">Demo para talleres mecánicos y afines</span>
+            <span className="eyebrow">Sistema para talleres que cotizan por WhatsApp</span>
             <h1>{workshop.heroTitle}</h1>
             <p className="heroText">{workshop.heroText}</p>
             <div className="heroActions">
               <a className="primaryButton" href="#cotizar">
-                Probar cotizador
+                Probar como cliente
               </a>
               <a className="secondaryButton" href="/panel">
-                Ver panel admin
+                Ver panel del taller · clave demo123
               </a>
             </div>
 
             <div className="trustRow" aria-label="Beneficios principales">
               <div>
-                <strong>Fotos</strong>
-                <span>Del daño o falla</span>
+                <strong>Consulta completa</strong>
+                <span>Datos útiles desde el inicio</span>
               </div>
               <div>
-                <strong>Vehículo</strong>
-                <span>Marca, modelo, año</span>
+                <strong>Fotos visibles</strong>
+                <span>Sin perderlas en el chat</span>
               </div>
               <div>
                 <strong>Seguimiento</strong>
-                <span>Estados simples</span>
+                <span>Estados simples para cerrar</span>
               </div>
             </div>
           </div>
@@ -93,12 +93,12 @@ export default function Home() {
               <div className="previewPhotoStrip">
                 <img src="/demo-fotos/parachoque.svg" alt="Foto de parachoque" />
                 <div>
-                  <strong>Mensaje listo</strong>
+                  <strong>Mensaje listo para responder</strong>
                   <p>Rayón profundo en parachoque trasero derecho. Puede llevarlo mañana en la tarde.</p>
                 </div>
               </div>
               <div className="fakeWhatsApp">
-                Hola, quiero cotizar reparación para mi vehículo. Marca/modelo: Toyota Yaris · Servicio: Pintura por pieza · Fotos cargadas.
+                Consulta ordenada: vehículo, servicio, comentario, disponibilidad y fotos. El taller responde sin volver a empezar la conversación.
               </div>
             </div>
           </div>
@@ -109,21 +109,42 @@ export default function Home() {
         <div className="container problemGrid">
           <div>
             <span className="eyebrow darkEyebrow">Problema real</span>
-            <h2>El WhatsApp del taller se llena de consultas incompletas.</h2>
+            <h2>No reemplaza WhatsApp. Lo ordena para vender mejor.</h2>
           </div>
           <p>
-            “¿Cuánto sale?” sin foto, sin modelo, sin año y sin explicación. Esta demo cambia esa entrada: el cliente se guía solo y el equipo responde con mejor información desde el primer contacto.
+            Muchos talleres pierden tiempo con consultas incompletas: “cuánto sale”, sin foto, sin modelo, sin año y sin horario. Este sistema hace que el cliente entregue la información mínima antes de hablar con el taller.
           </p>
         </div>
       </section>
 
-      <section id="servicios" className="section">
+      <section className="section">
         <div className="container">
           <div className="sectionHeader">
-            <span className="eyebrow">Servicios</span>
-            <h2>Una página comercial pensada para cotizar, no para decorar.</h2>
+            <span className="eyebrow">Para el dueño del taller</span>
+            <h2>La diferencia está en ordenar la entrada de trabajo.</h2>
             <p>
-              Sirve para talleres de pintura, desabolladura, mecánica general, mantención, reparación de choques menores y servicios automotrices especializados.
+              Un sitio común muestra información. Este sistema captura oportunidades, las ordena y deja un camino claro para responder, cotizar y agendar.
+            </p>
+          </div>
+          <div className="serviceGrid">
+            {workshop.ownerBenefits.map((benefit, index) => (
+              <article className="serviceCard" key={benefit.title}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <h3>{benefit.title}</h3>
+                <p>{benefit.text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="servicios" className="section workSection">
+        <div className="container">
+          <div className="sectionHeader">
+            <span className="eyebrow">Servicios adaptables</span>
+            <h2>Sirve para pintura, desabolladura, mecánica y mantención.</h2>
+            <p>
+              La demo está preparada para un taller general, pero puede ajustarse a un negocio específico: pintura, detailing, mecánica, diagnóstico, neumáticos o reparación de choques menores.
             </p>
           </div>
           <div className="serviceGrid">
@@ -138,15 +159,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="trabajos" className="section workSection">
+      <section id="trabajos" className="section">
         <div className="container">
           <div className="sectionHeader splitHeader">
             <div>
-              <span className="eyebrow">Antes / Después</span>
-              <h2>La confianza se muestra con resultados.</h2>
+              <span className="eyebrow">Confianza visual</span>
+              <h2>Las fotos ayudan a vender antes de la primera visita.</h2>
             </div>
             <p>
-              La galería queda preparada para reemplazar estas piezas de demo por fotos reales del taller. En este rubro, una buena imagen vende más que un texto largo.
+              En producción se reemplazan estas imágenes por trabajos reales del taller. En rubros automotrices, ver daños, terminaciones y casos resueltos ayuda a que el cliente avance con menos dudas.
             </p>
           </div>
           <div className="galleryGrid">
@@ -166,8 +187,8 @@ export default function Home() {
       <section className="flowSection">
         <div className="container">
           <div className="sectionHeader">
-            <span className="eyebrow">Flujo simple</span>
-            <h2>Menos conversación perdida. Más oportunidades listas para cerrar.</h2>
+            <span className="eyebrow">Flujo de venta</span>
+            <h2>Del “hola, cuánto sale” a una oportunidad trabajable.</h2>
           </div>
           <div className="flowGrid">
             {flowSteps.map((step, index) => (
@@ -184,12 +205,12 @@ export default function Home() {
       <section className="adminPreviewSection">
         <div className="container adminPreviewGrid">
           <div>
-            <span className="eyebrow">Panel de taller</span>
-            <h2>Diseñado para revisarlo desde el celular, entre trabajos.</h2>
+            <span className="eyebrow">Panel del taller</span>
+            <h2>Una bandeja simple para revisar oportunidades desde el celular.</h2>
             <p>
-              El admin ve fotos grandes, datos del vehículo, estado de la oportunidad, monto estimado, nota interna y botón directo para responder por WhatsApp.
+              El admin ve fotos, datos del vehículo, estado, disponibilidad, monto estimado, nota interna y botón directo para responder por WhatsApp. Es el punto donde el taller deja de depender de memoria y chats sueltos.
             </p>
-            <a className="secondaryButton" href="/panel">Entrar al panel demo</a>
+            <a className="secondaryButton" href="/panel">Entrar al panel demo · clave demo123</a>
           </div>
           <div className="adminPhoneMock">
             <div className="adminPhoneHeader">
@@ -200,7 +221,7 @@ export default function Home() {
               <img src="/demo-fotos/puerta.svg" alt="Puerta con abolladura" />
               <div>
                 <strong>Mauricio Pérez</strong>
-                <span>Hyundai Accent · Falta foto</span>
+                <span>Hyundai Accent · Falta foto · Responder hoy</span>
               </div>
             </div>
             <div className="adminMiniActions">
@@ -214,16 +235,17 @@ export default function Home() {
       <section id="cotizar" className="quoteSection">
         <div className="container quoteWrap">
           <aside className="quoteAside">
-            <span className="eyebrow">Prueba la demo</span>
-            <h2>Formulario guiado para que el cliente mande una consulta útil.</h2>
+            <span className="eyebrow">Probar como cliente</span>
+            <h2>Completa una consulta y después mírala desde el panel.</h2>
             <p>
-              Esta es la parte que más valor vende: convierte consultas vagas en oportunidades con fotos, vehículo, servicio y disponibilidad.
+              Este recorrido es lo que debe ver el cliente potencial: la persona consulta fácil, el taller recibe ordenado y el seguimiento queda centralizado.
             </p>
             <div className="asideChecklist">
               <span>✓ WhatsApp automático</span>
               <span>✓ Fotos visibles en panel</span>
               <span>✓ Estados de seguimiento</span>
-              <span>✓ Preparado para Supabase</span>
+              <span>✓ Supabase para oportunidades reales</span>
+              <span>✓ Modo demo para presentación comercial</span>
             </div>
           </aside>
           <QuoteForm />

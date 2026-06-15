@@ -889,6 +889,53 @@ a[aria-disabled="true"] {
   color: var(--red);
 }
 
+.demoFillButton,
+.ghostButton {
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff7ed;
+  color: var(--ink);
+  padding: 11px 14px;
+  font-weight: 900;
+}
+
+.demoFillButton {
+  margin-top: 16px;
+}
+
+.successActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.adminActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.demoModeBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffd0ae;
+  font-weight: 950;
+}
+
+.adminTop .ghostButton {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
 .footer {
   border-top: 1px solid var(--line);
   padding: 30px 0;
@@ -1207,6 +1254,53 @@ a[aria-disabled="true"] {
   line-height: 1.55;
 }
 
+.leadMetaStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.leadMetaStrip div {
+  min-width: 0;
+  padding: 13px;
+  border-radius: 18px;
+  background: #fff8ef;
+  border: 1px solid var(--line);
+}
+
+.leadMetaStrip span,
+.nextStepBox span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.055em;
+}
+
+.leadMetaStrip strong {
+  display: block;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
+
+.nextStepBox {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(240, 106, 43, 0.1);
+  border: 1px solid rgba(240, 106, 43, 0.24);
+}
+
+.nextStepBox strong {
+  display: block;
+  margin-top: 8px;
+  line-height: 1.45;
+  color: #5d2a15;
+}
+
 .photoSection {
   margin-top: 14px;
 }
@@ -1402,6 +1496,10 @@ a[aria-disabled="true"] {
     grid-template-columns: 1fr;
   }
 
+  .leadMetaStrip {
+    grid-template-columns: 1fr;
+  }
+
   .previewPhotoStrip,
   .adminMiniCard {
     grid-template-columns: 1fr;
@@ -1440,6 +1538,19 @@ a[aria-disabled="true"] {
   .previewGrid,
   .adminPhotoGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .successActions {
+    display: grid;
+  }
+
+  .adminActions {
+    justify-content: stretch;
+  }
+
+  .adminActions > * {
+    width: 100%;
+    justify-content: center;
   }
 
   .adminTop {

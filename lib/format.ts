@@ -6,7 +6,7 @@ export function onlyDigits(value: string): string {
 }
 
 export function formatCLP(value?: number | null): string {
-  if (!value) return "Sin monto";
+  if (value === undefined || value === null) return "Sin monto";
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency: "CLP",

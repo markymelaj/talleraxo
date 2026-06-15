@@ -3,9 +3,9 @@ import "./globals.css";
 import { workshop } from "@/data/workshop";
 
 export const metadata: Metadata = {
-  title: `${workshop.name} | Cotizador automotriz`,
+  title: `${workshop.name} | Cotizador para talleres`,
   description:
-    "Demo de cotizador digital para talleres mecánicos, pintura, desabolladura y servicios automotrices con WhatsApp ordenado."
+    "Cotizador digital para talleres: recibe fotos, datos del vehículo y disponibilidad en un panel ordenado para responder por WhatsApp."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

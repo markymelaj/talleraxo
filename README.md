@@ -13,7 +13,9 @@ Incluye:
 - Búsqueda por cliente, WhatsApp, patente, modelo o servicio.
 - Filtros por estado: nuevo, falta foto, cotización enviada, agendado, en taller, listo y perdido.
 - Monto estimado y nota interna por oportunidad.
-- Modo demo funcional sin Supabase.
+- Modo demo funcional sin Supabase. Las consultas cargadas desde la landing aparecen en el panel del mismo navegador usando localStorage.
+- Botón para cargar datos de ejemplo y mostrar el flujo en vivo.
+- Guía comercial en `DEMO_PRESENTACION.md`.
 
 ## Acceso demo
 
@@ -42,7 +44,18 @@ NEXT_PUBLIC_SITE_URL=https://tu-dominio.vercel.app
 ADMIN_PASSWORD=demo123
 ```
 
-Para una demo sin base de datos, puedes dejar Supabase vacío. El formulario abre WhatsApp y el panel muestra oportunidades demo.
+Para una demo sin base de datos, puedes dejar Supabase vacío. El formulario abre WhatsApp, guarda la oportunidad en el navegador y el panel muestra tanto oportunidades demo base como las consultas cargadas durante la presentación.
+
+## Cómo mostrar la demo
+
+1. Abrir la landing.
+2. Bajar al formulario o tocar **Probar cotizador**.
+3. Usar **Cargar ejemplo para mostrar la demo** o completar una consulta real.
+4. Enviar cotización. Se abre WhatsApp con el mensaje armado.
+5. Entrar a `/panel` con clave `demo123`.
+6. Mostrar la oportunidad, fotos, estados, monto estimado y respuesta por WhatsApp.
+
+Ver guion completo en `DEMO_PRESENTACION.md`.
 
 ## Supabase
 
@@ -100,7 +113,7 @@ npm 10.9.2
 
 ## Importante para Vercel
 
-No subir `node_modules`, `.next` ni `package-lock.json`.
+No subir `node_modules`, `.next` ni `package-lock.json`. El repo ya incluye `.gitignore`, `.npmrc` y `.env.example`.
 
 Este proyecto incluye:
 
